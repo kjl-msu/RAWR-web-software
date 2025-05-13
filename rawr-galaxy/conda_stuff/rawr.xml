@@ -1,0 +1,88 @@
+<tool id="rawr" name="RAWR random sampler" version="1.0" python_template_version="3.5">
+    <requirements>
+        <requirement type="package" version="1.0">rawr</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+    /full/path/to/dist/rawr/rawr
+                '$input1' 
+                '$input2'
+                #if $task
+                   --task '$task'
+                #end if
+                #if $algorithm
+                   --algorithm '$algorithm'
+                #end if
+                #if $n
+                   --n '$n'
+                #end if
+                #if $rate
+                   --rate '$rate'
+                #end if
+                #if $numanchor
+                   --numanchor '$numanchor'
+                #end if
+                #if $lenanchor
+                   --lenanchor '$lenanchor'
+                #end if
+                 > '$output1' 
+    ]]></command>
+    <inputs>
+        <param type="data" name="input1" format="fasta" />
+        <param type="data" name="input2" format="newick" />
+        <param name="task" type="text" label="(Optional) Do you want to estimate support for a [tree] or a [msa]? Defaults to tree." optional="true" />
+        <param name="algorithm" type="text" label="(Optional) Do you want to use random resampler [rawr] or [seres]? Defaults to rawr." optional="true" />
+        <param name="n" type="integer" label="(Optional) [Integer] Total number of resampled sequences (min 2), defaults to 10." optional="true" />
+        <param name="rate" type="float" label="(Optional) [Float] Reversal rate between [0, 1], defaults to 0.1." optional="true" />
+        <param name="numanchor" type="integer" label="(Optional) [Integer] (SERES only) Represents number of anchors, defaults to 20." optional="true" />
+        <param name="lenanchor" type="integer" label="(Optional) [Integer] (SERES only) Represents length of anchors, defaults to 5." optional="true" />
+    </inputs>
+    <outputs>
+        <data name="output1" format_source="task" metadata_source="task" format="newick" label="Auto Output" >
+        <change_format>
+        <when input="task" value="msa" format="txt"/>
+        </change_format>
+        </data>
+    </outputs>
+    <help><![CDATA[
+        usage: rawr [-h] [--algorithm [ALGORITHM]] [--task [TASK]]
+                   [--path [PATH]] [--n [N]] [--rate [RATE]]
+                   [--numanchor [NUMANCHOR]] [--lenanchor [LENANCHOR]]
+                   [-seed SEED] [--mafft MAFFT] [--raxml RAXML] [--verbose]
+                   alnfile treefile
+
+RAndom Walk Resampling command line software.
+
+positional arguments:
+  alnfile               <input> FASTA alignment file.
+  treefile              <input> Newick phylogeny tree file.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --algorithm [ALGORITHM]
+                        <optional> resampling algorithm choices [rawr, seres],
+                        default rawr.
+  --task [TASK]         <optional> output options: [tree, msa] Either outputs
+                        a phylogenetic tree using RAxML or a multiple sequence
+                        alignment support estimation, defaults to tree.
+  --path [PATH]         <optional> path to results directory, default
+                        output_{algorithm}.
+  --n [N]               <optional> total number of resampled sequences (min
+                        2), defaults to 10.
+  --rate [RATE]         <optional> reversal rate between [0, 1], defaults to
+                        0.1.
+  --numanchor [NUMANCHOR]
+                        <optional> SERES only. Represents number of anchors,
+                        defaults to 20.
+  --lenanchor [LENANCHOR]
+                        <optional> SERES only. Represents length of anchors,
+                        defaults to 5.
+  -seed SEED            <optional> set random seed
+  --mafft MAFFT         <optional> you can supply path to your own mafft if
+                        you do not want to use the standalone versions we
+                        supply.
+  --raxml RAXML         <optional> you can supply path to you own RAxML if you
+                        do not want to use the standalone versions we supply.
+  --verbose             <optional> prints verbose messages
+
+    ]]></help>
+</tool>

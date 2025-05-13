@@ -1,0 +1,116 @@
+<!doctype html> <html> <head>
+    <title>RAWR and SERES sequence resampling and support estimation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> </head> <body style="background-color:black"> 
+   <div id="maintext"
+style="position:absolute; margin:auto; width:700px; height:200px; text-align:center; top:0; bottom: 0; left: 0; right: 0;">
+   <h1 class="text-light mb-2"> RAWR and SERES support estimation </h1>
+   <h4 class="text-light mb-6">(Please upload FASTA format alignment file less than 50Mb)</h4>
+   <form form name="input_form" id="input_form" method=post enctype=multipart/form-data onsubmit="return validateform()" novalidate="novalidate">
+
+      <p class="text-light">
+         <font size="+0">Select Algorithm</font>
+         <select name="algorithm" id="algorithm" style="font-size: 15px;" onchange="toggle_Algorithm_Options()">
+            <option value="RAWR">RAWR</option>
+            <option value="SERES">SERES</option>
+         </select><br>
+      </p>
+      <p class="text-light">
+          <font size="+0">Select Support Type</font>
+         <select name="supportType" id="supportType" style="font-size: 15px;" onchange="toggle_SupportType_Options()">
+            <option value="Tree">Phylogenetic tree support</option>
+            <option value="MSA">MSA support</option>
+         </select><br>
+      </p>
+      <p class="text-light">
+         Reverse Rate <input type="text" name="reverseRate" value="0.1" />
+      </p>
+      <p class="text-light">
+         Sample Number <input type="text" name="sampleNum" value="10" />
+      </p>
+      
+      <p class="text-light" id="anchorNum" style="display: none;">
+         Anchor Number <input type="text" name="anchorNum" value="20" />
+      </p>
+	  <p class="text-light" id="anchorLen" style="display: none;">
+         Anchor Length <input type="text" name="anchorLen" value="5"/>
+      </p>
+      <p class="text-light" id="phyloTree" >
+         Phylogenetic Tree in Newick Format <input type="text" name="phyloTree" />
+      </p>
+      <p class="text-light" >
+        FASTA File Input <input type=file name=alignmentFile accept=".fasta,.fas,.fa">
+      </p>
+   	  <p class="text-light" id="emailAddress" >
+         E-mail Address to Receive Results <input type="text" name="emailAddress" />
+      </p>
+   <p>
+       <input type=submit value="Submit" >
+       <input type="reset" value="Reset">
+   </p>
+     
+   </form>
+   <script>
+      function toggle_Algorithm_Options() {
+         var chosen_algorithm = window.document.input_form.algorithm.value;
+         var show_anchorLen = document.getElementById("anchorLen");
+         var show_anchorNum = document.getElementById("anchorNum");
+         if (chosen_algorithm == 'SERES') {
+            show_anchorLen.style.display = 'block';
+            show_anchorNum.style.display = 'block';
+            show_anchorLen.setAttribute("default")
+            show_anchorNum.setAttribute("default")
+         }
+         if (chosen_algorithm == 'RAWR') {
+            show_anchorLen.style.display = 'none';
+            show_anchorNum.style.display = 'none';
+         }
+      }
+   </script>
+   <script>
+      function toggle_SupportType_Options() {
+         var chosen_supportType = window.document.input_form.supportType.value;
+         var show_phyloTree = document.getElementById("phyloTree");
+         if (chosen_supportType == 'Tree') {
+            show_phyloTree.style.display = 'block';
+         }
+         if (chosen_supportType == 'MSA') {
+            show_phyloTree.style.display = 'none';
+         }
+      }
+   </script>
+   <script>
+      function validateform() {
+            form = document.input_form;
+            if (form.alignmentFile.value == "") {
+               confirm("Please upload an sequence alignment file in .fasta, .fas, or .fa format.");
+               form.alignmentFile.focus();
+               return false
+            }
+            if (form.sampleNum.value == "") {
+               confirm("number of sampled repeats was set to default value (10)");
+               form.sampleNum.focus();
+               form.sampleNum.value = 10;
+               return false
+            }
+            if (form.sampleNum.value > 300) {
+               confirm("The maximum number of sampled repeats is 300");
+               form.sampleNum.focus();
+               form.sampleNum.value = 300;
+               return false
+            }
+            if (form.sampleNum.value < 1) {
+               confirm("The maximum number of sampled repeats is 1");
+               form.sampleNum.focus();
+               form.sampleNum.value = 1;
+               return false
+            }
+         }
+         // Call this function when the page loads to set correct visibility based on the current selection
+         window.onload = function() {
+             toggle_Algorithm_Options();  // Ensure correct algorithm-related fields are visible
+             toggle_SupportType_Options();  // Ensure correct support type fields are visible
+         }
+   </script>
+ </div> </body>
+</html>

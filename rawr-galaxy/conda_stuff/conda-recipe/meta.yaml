@@ -1,0 +1,13 @@
+{% set name = "rawr" %}
+{% set version = "1.0" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  path: ../rawr
+
+about:
+  home: 
+  license: GPLv3
